@@ -3,20 +3,21 @@
 
 <template>
   <div class="row align-items-center">
-    <div class="col-auto">
+    <RouterLink to="/" class="col-auto">
       <img src="/databases-logo.png" class="logo" alt="Soundtracked logo" />
-    </div>
+    </RouterLink>
     <h1 class="col-auto">Soundtracked</h1>
   </div>
   <main>
     <RouterView />
   </main>
-  <h5>Current route path: {{ $route.fullPath }}</h5>
-  <nav>
-    <RouterLink to="/">Go To Home</RouterLink>
-    <div></div>
-    <RouterLink to="/about"> Go To About</RouterLink>
-  </nav>
+  <br>
+    <h5>Current route path: {{ $route.fullPath }}</h5>
+    <nav>
+      <RouterLink to="/">Go To Home</RouterLink>
+      <div></div>
+      <RouterLink to="/about"> Go To About</RouterLink>
+    </nav>
 </template>
 
 <style scoped>
