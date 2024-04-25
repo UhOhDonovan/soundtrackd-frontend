@@ -8,7 +8,7 @@ import About from "./components/About.vue";
 
 const routes = [
   { path: "/", component: HelloWorld, props: {
-    msg: 'Welcome to Soundtracked!'
+    msg: 'Welcome to Soundtrackd!'
   } },
   { path: "/about", component: About },
 ];

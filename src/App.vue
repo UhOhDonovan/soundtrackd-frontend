@@ -4,9 +4,9 @@
 <template>
   <div class="row align-items-center">
     <RouterLink to="/" class="col-auto">
-      <img src="/databases-logo.png" class="logo" alt="Soundtracked logo" />
+      <img src="/soundtrackd-logo.png" class="logo" alt="Soundtrackd logo" />
     </RouterLink>
-    <h1 class="col-auto">Soundtracked</h1>
+    <h1 class="col-auto">Soundtrackd</h1>
   </div>
   <main>
     <RouterView />
