@@ -17,6 +17,10 @@
       <RouterLink to="/">Go To Home</RouterLink>
       <div></div>
       <RouterLink to="/about"> Go To About</RouterLink>
+      <div></div>
+      <RouterLink to="/register">Go To Register</RouterLink>
+      <div></div>
+      <RouterLink to="/login">Go To Login</RouterLink>
     </nav>
 </template>
 
@@ -31,10 +35,6 @@
 }
 
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+  filter: drop-shadow(0 0 2em #00D3C0);
 }
 </style>
