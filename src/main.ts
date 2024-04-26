@@ -4,7 +4,7 @@ import App from "./App.vue";
 
 import { createMemoryHistory, createRouter } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
-import About from "./components/About.vue";
+import Search from "./components/Search.vue";
 import Register from "./components/Register.vue";
 import Login from "./components/Login.vue";
 
@@ -12,7 +12,7 @@ const routes = [
   { path: "/", component: HelloWorld, props: {
     msg: 'Welcome to Soundtrackd!'
   } },
-  { path: "/about", component: About },
+  { path: "/search", component: Search },
   { path: "/register", component: Register},
   { path: "/login", component: Login},
 ];

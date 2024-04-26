@@ -10,13 +10,20 @@ const testAPI = async () => {
   console.log(await response.json())
 }
 
-const count = ref(0)
 </script>
 
 <template>
   <div class="card">
-    <h1>{{ msg }}</h1>
-    <button type="button" @click="testAPI">Test API</button>
+    <h1 class="row">{{ msg }}</h1>
+    <div class="row justify-content-center">
+      <RouterLink to="/login" class="col-2 button">
+        Login
+      </RouterLink>
+      <br>
+      <RouterLink to="/register" class="col-2 button">
+        Register
+      </RouterLink>
+    </div>
   </div>
 </template>
 

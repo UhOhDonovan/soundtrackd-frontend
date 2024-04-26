@@ -2,26 +2,26 @@
 </script>
 
 <template>
-  <div class="row align-items-center">
-    <RouterLink to="/" class="col-auto">
-      <img src="/soundtrackd-logo.png" class="logo" alt="Soundtrackd logo" />
+  <div class="row" style="justify-content: left;">
+    <RouterLink to="/">
+      <img src="/soundtrackd-logo.png" class="logo" alt="Soundtrackd logo" style="margin-right: 5px;" />
     </RouterLink>
-    <h1 class="col-auto">Soundtrackd</h1>
+    <h1>Soundtrackd</h1>
   </div>
   <main>
     <RouterView />
   </main>
   <br>
-    <h5>Current route path: {{ $route.fullPath }}</h5>
-    <nav>
-      <RouterLink to="/">Go To Home</RouterLink>
-      <div></div>
-      <RouterLink to="/about"> Go To About</RouterLink>
-      <div></div>
-      <RouterLink to="/register">Go To Register</RouterLink>
-      <div></div>
-      <RouterLink to="/login">Go To Login</RouterLink>
-    </nav>
+  <h5>Current route path: {{ $route.fullPath }}</h5>
+  <nav>
+    <RouterLink to="/">Go To Home</RouterLink>
+    <div></div>
+    <RouterLink to="/search"> Go To Search</RouterLink>
+    <div></div>
+    <RouterLink to="/register">Go To Register</RouterLink>
+    <div></div>
+    <RouterLink to="/login">Go To Login</RouterLink>
+  </nav>
 </template>
 
 <style scoped>

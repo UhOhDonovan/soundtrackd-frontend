@@ -16,7 +16,7 @@ const search = computed({
 </script>
 
 <template>
-    <h2>About</h2>
+    <h2>Search</h2>
     <label>
         Search: <input v-model.trim="search" maxlength="20">
     </label>
