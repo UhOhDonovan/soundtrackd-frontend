@@ -23,6 +23,9 @@ const testAPI = async () => {
       <RouterLink to="/register" class="col-2 button">
         Register
       </RouterLink>
+      <button @click="testAPI()" class="col-2 button">
+        tester
+      </button>
     </div>
   </div>
 </template>
