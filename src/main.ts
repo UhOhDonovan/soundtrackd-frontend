@@ -9,12 +9,12 @@ import Register from "./components/Register.vue";
 import Login from "./components/Login.vue";
 
 const routes = [
-  { path: "/", component: HelloWorld, props: {
+  { path: "/", name: 'HelloWorld', component: HelloWorld, props: {
     msg: 'Welcome to Soundtrackd!'
   } },
-  { path: "/search", component: Search },
-  { path: "/register", component: Register},
-  { path: "/login", component: Login},
+  { path: "/search", name: 'Search', component: Search },
+  { path: "/register", name: 'Register', component: Register},
+  { path: "/login", name: 'Login', component: Login},
 ];
 
 const router = createRouter({
