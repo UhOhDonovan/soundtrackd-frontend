@@ -5,8 +5,7 @@ USE Soundtrackd;
 CREATE TABLE USER(
     email VARCHAR(254) PRIMARY KEY,
     username VARCHAR(60) UNIQUE NOT NULL,
-    password VARCHAR(60) NOT NULL,
-    display_name VARCHAR(20) NOT NULL
+    password VARCHAR(64) NOT NULL
 );
 
 CREATE TABLE FOLLOWS_USER(
