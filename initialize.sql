@@ -1,6 +1,7 @@
 DROP DATABASE IF EXISTS Soundtrackd;
-CREATE DATABASE Soundtrackd;
-USE Soundtrackd;
+DROP DATABASE IF EXISTS soundtrackd;
+CREATE DATABASE soundtrackd;
+USE soundtrackd;
 
 CREATE TABLE USER(
     email VARCHAR(254) PRIMARY KEY,
