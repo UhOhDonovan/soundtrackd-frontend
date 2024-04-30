@@ -4,14 +4,14 @@ const router = useRouter()
 
 let email = ""
 let username = ""
-let  password = ""
+let password = ""
 let error = ""
 
-function register(){
-  if(password.length < 3){
+function register() {
+  if (password.length < 3) {
     console.log("password too short");
   }
-  else{
+  else {
     sendInfo(email, username, password)
     //router.push({ path: '/login'})
   }
@@ -19,17 +19,27 @@ function register(){
 
 const sendInfo = async (email: string, username: string, password: string) => {
   // IK this is sketchy but it's the only way I could get it to work
-  const response = await fetch(`http://localhost:5345/register/?email=${email}&username=${username}&password=${password}`, {
+  const request = {
+    email: email,
+    username: username,
+    password: password,
+  }
+
+  const response = await fetch(`http://localhost:5345/register`, {
     method: "POST",
-    mode: 'no-cors',
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request)
   })
+
   console.log(response)
-  if (!response.ok){
+  if (!response.ok) {
     error = response.statusText
     console.log(`Error: ${error}`)
   }
-  else{
-    router.push({ path: '/login'})
+  else {
+    router.push({ path: '/login' })
   }
 
   console.log(response.ok)
@@ -57,20 +67,22 @@ const sendInfo = async (email: string, username: string, password: string) => {
       <br>
       <button type="submit" class="button">Register</button>
     </form>
-  
-    <p>Already have an account? <RouterLink to="/Login">Log in!</RouterLink></p>
+
+    <p>Already have an account? <RouterLink to="/Login">Log in!</RouterLink>
+    </p>
   </div>
 </template>
 
 <style scoped>
-  .button{
-    background-color: #00D3C0;
-  }
-  .button:hover{
-    color:white;
-  }
-  .error-text{
-    color: red;
-  }
+.button {
+  background-color: #00D3C0;
+}
 
+.button:hover {
+  color: white;
+}
+
+.error-text {
+  color: red;
+}
 </style>
