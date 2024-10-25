@@ -64,8 +64,8 @@ h1 {
   margin-right: 5px;
 }
 .button:hover {
-  border-color: #646cff;
-  color: #646cff;
+  border-color: #5beade;
+  color: #5beade;
 }
 .button:focus,
 .button:focus-visible {
