@@ -1,13 +1,11 @@
 <script setup lang="ts">
+import NavBar from "./components/NavBar.vue";
 </script>
 
 <template>
-  <div class="row" style="justify-content: left;">
-    <RouterLink to="/">
-      <img src="/soundtrackd-logo.png" class="logo" alt="Soundtrackd logo" style="margin-right: 5px;" />
-    </RouterLink>
-    <h1>Soundtrackd</h1>
-  </div>
+  <NavBar />
+  
+  
   <main>
     <RouterView />
   </main>
@@ -25,16 +23,21 @@
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding-top: 1em;
-  padding-bottom: 1.5em;
-  padding-right: 0em;
-  will-change: filter;
-  transition: filter 300ms;
+
+.nav-link {
+  float: center;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #00D3C0);
+.nav-link a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
 }
+
 </style>
