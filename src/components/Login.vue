@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 const router = useRouter()
 
 let userfield: string = "";
@@ -41,7 +41,7 @@ const sendInfo = async (userfield: string, password: string) => {
 </script>
 
 <template>
-  <div class="align-items-start ">
+  <div>
     <h2>Welcome back!</h2>
     <label for="email">Email or Username: </label>
     <input type="email" name="email" class="field" v-model="userfield">

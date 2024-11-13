@@ -1,0 +1,7 @@
+services:
+  web:
+    container_name: soundtrackd-frontend
+    image: soundtrackd-frontend:latest
+    restart: always
+    ports:
+      - 3000:3000
