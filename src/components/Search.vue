@@ -55,8 +55,8 @@ export default {
       <div class="row" v-for="i in [0,4,8,12,16]">
         <div class="column" v-for="result in search_results.slice(i, i+4)">
           <div class="card" v-if="result" @click="$router.push({name: 'Album', params: {id: result.id}})">
-            <p id="album-title">{{ result['name'] }}</p>
             <img id="album-cover":src="`${result['images'][0]['url']}`"></img>
+            <p id="album-title">{{ result['name'] }}</p>
             <!-- <img id="album-cover":src="`${result['images'][0]['url']}`" style="width:100px"></img> -->
             <p v-for="artist in result['artists']">{{ artist['name'] }}</p>
           </div>
@@ -101,7 +101,7 @@ body {
   transition: background-color 0.3s ease;
 }
 .card img {
-  width: 50px;
+  width: 100%;
   height: auto;
 }
 

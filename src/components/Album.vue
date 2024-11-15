@@ -40,20 +40,27 @@ export default {
         this.is_loading = false
       })
     }
-  }  
+  },
+  mounted(){
+    this.get()
+  }
 }
 </script>
 
 <template>
-    <h2>Album</h2>
-    <button @click="get()">get it</button>
-    <p class="search-progress" v-if="is_loading">retrieving album {{ spotify_id }}</p>
-    <p>id={{spotify_id}}</p>
-    <div v-if="album_info.name">
-      <p>name: {{ album_info.name }}</p>
-      <img :src="`${album_info['images'][0]['url']}`">
-      <div v-for="track in album_info['tracks']['items']">
-        <p>{{ track.track_number }}. <a v-bind:href="`${track['external_urls']['spotify']}`">{{ track.name }}</a></p>
+    <p class="search-progress" v-if="is_loading">Loading album info</p>
+    <div class="container">
+      <div class="album-column">
+        <div v-if="album_info.name">
+          <p id="album-title">{{ album_info.name }}</p>
+          <img :src="`${album_info['images'][0]['url']}`">
+          <div v-for="track in album_info['tracks']['items']">
+            <p>{{ track.track_number }}. <a v-bind:href="`${track['external_urls']['spotify']}`">{{ track.name }}</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="review-column">
+        <div class="card" v-for="i in [1,2,3,4,5]">review_{{ i }}</div>
       </div>
     </div>
 </template>
@@ -67,12 +74,38 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.container {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.album-column {
+    flex: 0 0 auto;
+    width: 30%;
+    height: 100vh;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+.review-column {
+    flex: 0 0 auto;
+    width: 70%;
+    height: 100vh;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
 /* Float four columns side by side */
-.column {
+/* .column {
   float: left;
   width: 100%;
   padding: 0 10px;
-}
+} */
 
 /* Remove extra left and right margins, due to padding in columns */
 .row {margin: 10px -5px 20px;}
@@ -93,8 +126,8 @@ body {
   background-color: #f1f1f1;
   transition: background-color 0.3s ease;
 }
-.card img {
-  width: 50px;
+img {
+  width: 100%;
   height: auto;
 }
 
