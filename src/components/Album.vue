@@ -1,66 +1,59 @@
 <script lang="ts">
+import { defineProps } from 'vue';
 
 // import { computed } from 'vue'
 // import { useRoute, useRouter } from 'vue-router'
+defineProps({
+  id: String
+})
+
 export default {
   data() {
     return {
-      search_results: [{
+      album_info: {
         name: '',
-        id: '',
         artists: [{name: ''}],
-        images: [{url: ''}]
-      }],
-      url_root: "http://localhost:5345/search/album",
+        images: [{url: ''}],
+        tracks: {
+          items: [
+            { name: '',
+              track_number: 0,
+              external_urls: {
+                spotify: ''
+              }
+            }
+          ]
+        }
+      },
+      url_root: "http://localhost:5345/search/album/id?id=",
       q: "",
-      is_searching: false
+      is_loading: false,
+      spotify_id: this.$route.params.id
     }
   },
   methods: {
-    search_spotify() {
-      this.is_searching = true;
-      fetch(this.url_root + "?q=" + this.q)
+    get() {
+      this.is_loading = true;
+      fetch(this.url_root + this.spotify_id)
       .then(res => res.json())
-      .then(data => {this.search_results = data['items'];
-        this.is_searching = false
+      .then(data => {this.album_info = data;
+        this.is_loading = false
       })
     }
-  }
-  
+  }  
 }
-
-
-// const router = useRouter()
-// const route = useRoute()
-// const url_root = "http://localhost:5345/search/album";
-// let q = "";
-// let result = 1;
-
-// const search_spotify = () => {
-//     result = result + 1;
-//     fetch(url_root + "?q=" + q)
-//     .then(res => res.json())
-//     .then(data => console.log(data))
-//   }
 </script>
 
 <template>
-    <h2>Search</h2>
-    <input v-model.trim="q" maxlength="50" @keyup.enter="search_spotify()">
-    <button @click="search_spotify()" class="col-2 button">
-      Search
-    </button>
-    <p class="search-progress" v-if="is_searching">Searching for "{{ q }}"</p>
-    <div v-if="search_results[0]['name'] && !is_searching">
-      <div class="row" v-for="i in [0,4,8,12,16]">
-        <div class="column" v-for="result in search_results.slice(i, i+4)">
-          <div class="card" v-if="result" @click="$router.push({name: 'Album', params: {id: result.id}})">
-            <p id="album-title">{{ result['name'] }}</p>
-            <img id="album-cover":src="`${result['images'][0]['url']}`"></img>
-            <!-- <img id="album-cover":src="`${result['images'][0]['url']}`" style="width:100px"></img> -->
-            <p v-for="artist in result['artists']">{{ artist['name'] }}</p>
-          </div>
-        </div>
+    <h2>Album</h2>
+    <button @click="get()">get it</button>
+    <p class="search-progress" v-if="is_loading">retrieving album {{ spotify_id }}</p>
+    <p>id={{spotify_id}}</p>
+    <div v-if="album_info.name">
+      <p>name: {{ album_info.name }}</p>
+      <img :src="`${album_info['images'][0]['url']}`">
+      <div v-for="track in album_info['tracks']['items']">
+        <p>{{ track.track_number }}. <a v-bind:href="`${track['external_urls']['spotify']}`">{{ track.name }}</a></p>
       </div>
     </div>
 </template>
@@ -112,17 +105,6 @@ body {
 #album-title {
   font-weight: bold;
   font-size: 15pt;
-}
-
-
-
-/* Responsive columns - one column layout (vertical) on small screens */
-@media screen and (max-width: 600px) {
-  .column {
-    width: 100%;
-    display: block;
-    margin-bottom: 20px;
-  }
 }
 
 @keyframes flickerAnimation {
