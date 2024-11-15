@@ -1,4 +1,6 @@
 <script lang="ts">
+import { toValue } from 'vue';
+
 // import { computed } from 'vue'
 // import { useRoute, useRouter } from 'vue-router'
 export default {
@@ -10,14 +12,18 @@ export default {
         images: [{url: ''}]
       }],
       url_root: "http://localhost:5345/search/album",
-      q: ""
+      q: "",
+      is_searching: false
     }
   },
   methods: {
     search_spotify() {
+      this.is_searching = true;
       fetch(this.url_root + "?q=" + this.q)
       .then(res => res.json())
-      .then(data => this.search_results = data['items'])
+      .then(data => {this.search_results = data['items'];
+        this.is_searching = false
+      })
     }
   }
   
@@ -40,25 +46,17 @@ export default {
 
 <template>
     <h2>Search</h2>
-    <input v-model.trim="q" maxlength="20">
+    <input v-model.trim="q" maxlength="50" @keyup.enter="search_spotify()">
     <button @click="search_spotify()" class="col-2 button">
       Search
     </button>
-    <div v-if="search_results[0]['name']">
-      <div class="row">
-        <div class="column" v-for="result in search_results.slice(0, 5)">
+    <p class="search-progress" v-if="is_searching">Searching for "{{ q }}"</p>
+    <div v-if="search_results[0]['name'] && !is_searching">
+      <div class="row" v-for="i in [0,4,8,12,16]">
+        <div class="column" v-for="result in search_results.slice(i, i+4)">
           <div class="card" v-if="result">
-            <p>{{ result['name'] }}</p>
-            <img :src="`${result['images'][0]['url']}`" style="width:100px"></img>
-            <p v-for="artist in result['artists']">{{ artist['name'] }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="column" v-for="result in search_results.slice(5, 10)">
-          <div class="card" v-if="result">
-            <p>{{ result['name'] }}</p>
-            <img :src="`${result['images'][0]['url']}`" style="width:100px"></img>
+            <p id="album-title">{{ result['name'] }}</p>
+            <img id="album-cover":src="`${result['images'][0]['url']}`" style="width:100px"></img>
             <p v-for="artist in result['artists']">{{ artist['name'] }}</p>
           </div>
         </div>
@@ -78,7 +76,7 @@ body {
 /* Float four columns side by side */
 .column {
   float: left;
-  width: 25%;
+  width: 100%;
   padding: 0 10px;
 }
 
@@ -101,9 +99,18 @@ body {
   background-color: #f1f1f1;
   transition: background-color 0.3s ease;
 }
+.card img {
+  width: 50px;
+  height: auto;
+}
 
 .card:hover {
   background-color: #e0e0e0;
+}
+
+#album-title {
+  font-weight: bold;
+  font-size: 15pt;
 }
 
 
@@ -115,5 +122,33 @@ body {
     display: block;
     margin-bottom: 20px;
   }
+}
+
+@keyframes flickerAnimation {
+  0%   { opacity:1; }
+  50%  { opacity:0.25; }
+  100% { opacity:1; }
+}
+@-o-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0.25; }
+  100% { opacity:1; }
+}
+@-moz-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0.25; }
+  100% { opacity:1; }
+}
+@-webkit-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0.25; }
+  100% { opacity:1; }
+}
+
+.search-progress {
+  -webkit-animation: flickerAnimation 1.25s infinite;
+  -moz-animation: flickerAnimation 1.25s infinite;
+  -o-animation: flickerAnimation 1.25s infinite;
+  animation: flickerAnimation 1.25s infinite;
 }
 </style>
