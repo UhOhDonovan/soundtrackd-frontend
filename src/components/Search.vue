@@ -1,7 +1,4 @@
 <script lang="ts">
-
-// import { computed } from 'vue'
-// import { useRoute, useRouter } from 'vue-router'
 export default {
   data() {
     return {
@@ -28,20 +25,6 @@ export default {
   }
   
 }
-
-
-// const router = useRouter()
-// const route = useRoute()
-// const url_root = "http://localhost:5345/search/album";
-// let q = "";
-// let result = 1;
-
-// const search_spotify = () => {
-//     result = result + 1;
-//     fetch(url_root + "?q=" + q)
-//     .then(res => res.json())
-//     .then(data => console.log(data))
-//   }
 </script>
 
 <template>
