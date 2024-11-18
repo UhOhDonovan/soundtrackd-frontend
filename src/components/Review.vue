@@ -1,7 +1,8 @@
 <script lang="ts">
 import { defineProps } from 'vue';
-import Review from "./Review.vue";
 
+// import { computed } from 'vue'
+// import { useRoute, useRouter } from 'vue-router'
 defineProps({
   id: String
 })
@@ -48,20 +49,8 @@ export default {
 
 <template>
     <p class="search-progress" v-if="is_loading">Loading album info</p>
-    <div class="container">
-      <div class="album-column">
-        <div v-if="album_info.name">
-          <p id="album-title">{{ album_info.name }}</p>
-          <img :src="`${album_info['images'][0]['url']}`">
-          <div v-for="track in album_info['tracks']['items']">
-            <p>{{ track.track_number }}. <a v-bind:href="`${track['external_urls']['spotify']}`">{{ track.name }}</a></p>
-          </div>
-        </div>
-      </div>
-      <div class="review-column">
-        <Review />
-        <div class="card" v-for="i in [1,2,3,4,5]">review_{{ i }}</div>
-      </div>
+    <div class="card">
+      <p>This is a review</p>
     </div>
 </template>
 
@@ -100,6 +89,7 @@ body {
     box-sizing: border-box;
     overflow-y: auto;
 }
+
 
 /* Remove extra left and right margins, due to padding in columns */
 .row {margin: 10px -5px 20px;}
