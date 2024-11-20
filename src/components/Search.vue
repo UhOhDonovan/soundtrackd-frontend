@@ -35,8 +35,8 @@ export default {
     </button>
     <p class="search-progress" v-if="is_searching">Searching for "{{ q }}"</p>
     <div v-if="search_results[0]['name'] && !is_searching">
-      <div class="row" v-for="i in [0,4,8,12,16]">
-        <div class="column" v-for="result in search_results.slice(i, i+4)">
+      <div class="row" v-for="i in [0,5,10,15,20]">
+        <div class="column" v-for="result in search_results.slice(i, i+5)">
           <div class="card" v-if="result" @click="$router.push({name: 'Album', params: {id: result.id}})">
             <img id="album-cover":src="`${result['images'][0]['url']}`"></img>
             <p id="album-title">{{ result['name'] }}</p>

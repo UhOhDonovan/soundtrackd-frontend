@@ -8,6 +8,7 @@ defineProps({
 })
 
 export default {
+  name: 'Review',
   data() {
     return {
       album_info: {

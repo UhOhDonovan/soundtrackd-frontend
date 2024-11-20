@@ -7,6 +7,7 @@ defineProps({
 })
 
 export default {
+  components: {Review},
   data() {
     return {
       album_info: {
@@ -38,6 +39,17 @@ export default {
       .then(data => {this.album_info = data;
         this.is_loading = false
       })
+    },
+    artist_string(artists: {name: string}[]) {
+      let result = "";
+      for (let i = 0; i < artists.length - 1; i++){
+        result += artists[i].name + ", "
+      }
+      if (result != ""){
+        result += "and "
+      }
+      result += artists[artists.length - 1]["name"]
+      return result
     }
   },
   mounted(){
@@ -51,8 +63,9 @@ export default {
     <div class="container">
       <div class="album-column">
         <div v-if="album_info.name">
-          <p id="album-title">{{ album_info.name }}</p>
           <img :src="`${album_info['images'][0]['url']}`">
+          <p id="album-title">{{ album_info.name }}</p>
+          <p id="artists">{{ artist_string(album_info.artists) }}</p>
           <div v-for="track in album_info['tracks']['items']">
             <p>{{ track.track_number }}. <a v-bind:href="`${track['external_urls']['spotify']}`">{{ track.name }}</a></p>
           </div>
@@ -60,7 +73,7 @@ export default {
       </div>
       <div class="review-column">
         <Review />
-        <div class="card" v-for="i in [1,2,3,4,5]">review_{{ i }}</div>
+        <div class="card" v-for="i in [1,2,3,4,5]">Placeholder review {{ i }}</div>
       </div>
     </div>
 </template>
@@ -77,7 +90,7 @@ body {
 .container {
     display: flex;
     overflow-x: auto;
-    white-space: nowrap;
+    white-space: wrap;
 }
 
 .album-column {
@@ -85,17 +98,19 @@ body {
     width: 30%;
     height: 100vh;
     border: 1px solid #ccc;
-    margin-right: 10px;
+    /* margin-right: 10px; */
     padding: 10px;
     box-sizing: border-box;
     overflow-y: auto;
+    /* overflow-x: hidden; */
+    /* white-space: wrap; */
 }
 .review-column {
     flex: 0 0 auto;
     width: 70%;
     height: 100vh;
     border: 1px solid #ccc;
-    margin-right: 10px;
+    /* margin-right: 10px; */
     padding: 10px;
     box-sizing: border-box;
     overflow-y: auto;
@@ -116,12 +131,13 @@ body {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
   border-radius: 15px;
   padding: 16px;
+  margin: 20px;
   text-align: center;
   background-color: #f1f1f1;
   transition: background-color 0.3s ease;
 }
 img {
-  width: 100%;
+  width: 75%;
   height: auto;
 }
 
@@ -132,6 +148,9 @@ img {
 #album-title {
   font-weight: bold;
   font-size: 15pt;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word
 }
 
 @keyframes flickerAnimation {
