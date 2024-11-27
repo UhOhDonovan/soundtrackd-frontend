@@ -1,130 +1,68 @@
 <script lang="ts">
-import { defineProps } from 'vue';
-
+// import { defineProps } from 'vue';
+import { PropType } from 'vue';
+import Album from './Album.vue';
+// import Album from './Album.vue';
+// TODO: likely revise this data structure, adding necessary info from the API
+type ReviewData = {
+  id: Number,
+  posted_by: String,
+  album_spotify_id: String,
+  post_date: String,
+  post_time: String,
+  rating: Number,
+  body: String,
+}
 // import { computed } from 'vue'
 // import { useRoute, useRouter } from 'vue-router'
-defineProps({
-  id: String
-})
 
 export default {
   name: 'Review',
+  props: {
+    id: String,
+    review: Object as PropType<ReviewData>,
+    showAlbum: Boolean,
+  },
   data() {
     return {
-      album_info: {
-        name: '',
-        artists: [{name: ''}],
-        images: [{url: ''}],
-        tracks: {
-          items: [
-            { name: '',
-              track_number: 0,
-              external_urls: {
-                spotify: ''
-              }
-            }
-          ]
-        }
-      },
-      url_root: "http://localhost:5345/search/album/id?id=",
-      q: "",
       is_loading: false,
-      spotify_id: this.$route.params.id
     }
   },
   methods: {
-    get() {
-      this.is_loading = true;
-      fetch(this.url_root + this.spotify_id)
-      .then(res => res.json())
-      .then(data => {this.album_info = data;
-        this.is_loading = false
-      })
-    }
+    // TODO: Replace with function to retrieve review from id
+    // get() {
+    //   this.is_loading = true;
+    //   fetch(this.url_root + this.spotify_id)
+    //   .then(res => res.json())
+    //   .then(data => {this.album_info = data;
+    //     this.is_loading = false
+    //   })
+    // }
   },
   mounted(){
-    this.get()
+    // this.get()
   }
 }
 </script>
 
 <template>
-    <p class="search-progress" v-if="is_loading">Loading album info</p>
-    <div class="card">
-      <p>This is a review</p>
+  <div class="review">
+      <p class="search-progress" v-if="is_loading">Loading review info</p>
+      <div v-else-if="review">
+        <div class="review-header">
+          <div class="description">
+            <strong>{{ review.id }}'s review<span v-if="showAlbum"> of <RouterLink :to="{name: 'Album', params: {id: review.album_spotify_id}}">[album name]</RouterLink></span></strong>
+          </div>
+          <p id="rating" v-if="review.rating">Rating: {{ review.rating }}</p>
+        </div>
+        <div class="review-content">
+          <p id="text">"{{ review.body }}"</p>
+        </div>
+      </div>
     </div>
 </template>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.container {
-    display: flex;
-    overflow-x: auto;
-    white-space: nowrap;
-}
-
-.album-column {
-    flex: 0 0 auto;
-    width: 30%;
-    height: 100vh;
-    border: 1px solid #ccc;
-    margin-right: 10px;
-    padding: 10px;
-    box-sizing: border-box;
-    overflow-y: auto;
-}
-.review-column {
-    flex: 0 0 auto;
-    width: 70%;
-    height: 100vh;
-    border: 1px solid #ccc;
-    margin-right: 10px;
-    padding: 10px;
-    box-sizing: border-box;
-    overflow-y: auto;
-}
-
-
-/* Remove extra left and right margins, due to padding in columns */
-.row {margin: 10px -5px 20px;}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-/* Style the counter cards */
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
-  border-radius: 15px;
-  padding: 16px;
-  text-align: center;
-  background-color: #f1f1f1;
-  transition: background-color 0.3s ease;
-}
-img {
-  width: 100%;
-  height: auto;
-}
-
-.card:hover {
-  background-color: #e0e0e0;
-}
-
-#album-title {
-  font-weight: bold;
-  font-size: 15pt;
-}
-
 @keyframes flickerAnimation {
   0%   { opacity:1; }
   50%  { opacity:0.25; }
@@ -151,5 +89,29 @@ img {
   -moz-animation: flickerAnimation 1.25s infinite;
   -o-animation: flickerAnimation 1.25s infinite;
   animation: flickerAnimation 1.25s infinite;
+}
+
+.review {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 10px;
+  /* max-width: 600px; */
+  font-family: Arial, sans-serif;
+}
+.review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow-x:visible;
+}
+.post-header img {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+.review-content {
+  margin-top: 10px;
 }
 </style>

@@ -1,13 +1,13 @@
 <script lang="ts">
-import { defineProps } from 'vue';
 import Review from "./Review.vue";
 
-defineProps({
-  id: String
-})
 
 export default {
+  name: 'Album',
   components: {Review},
+  props: {
+    id: String,
+  },
   data() {
     return {
       album_info: {
@@ -28,7 +28,17 @@ export default {
       url_root: "http://localhost:5345/search/album/id?id=",
       q: "",
       is_loading: false,
-      spotify_id: this.$route.params.id
+      spotify_id: this.$route.params.id,
+      temp_review: {
+        id: 123124211,
+        posted_by: "SpooderNoob",
+        album_spotify_id: "1woCvthHJakakroP6dXNxs",
+        post_date: "11/24/2024",
+        post_time: "7:55 PM",
+        rating: 9,
+        body: "This is a  crazy review about the album on this page! It was so crazy and wild ot listen to it! What a crazy world we live in.",
+      },
+      show_album: false,
     }
   },
   methods: {
@@ -72,8 +82,7 @@ export default {
         </div>
       </div>
       <div class="review-column">
-        <Review />
-        <div class="card" v-for="i in [1,2,3,4,5]">Placeholder review {{ i }}</div>
+        <Review :review="temp_review" :show-album="true" v-for="i in [1,2,3,4,5]"/>
       </div>
     </div>
 </template>
