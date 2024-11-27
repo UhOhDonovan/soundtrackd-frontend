@@ -1,13 +1,14 @@
 <script lang="ts">
 // import { defineProps } from 'vue';
 import { PropType } from 'vue';
-import Album from './Album.vue';
+// import Album from './Album.vue';
 // import Album from './Album.vue';
 // TODO: likely revise this data structure, adding necessary info from the API
 type ReviewData = {
   id: Number,
   posted_by: String,
   album_spotify_id: String,
+  // album_name: String,
   post_date: String,
   post_time: String,
   rating: Number,
