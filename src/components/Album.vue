@@ -69,20 +69,20 @@ export default {
 </script>
 
 <template>
-    <p class="search-progress" v-if="is_loading">Loading album info</p>
-    <div class="container">
-      <div class="album-column">
-        <div v-if="album_info.name">
+  <div class="container">
+    <div class="album-column">
+      <p class="search-progress" v-if="is_loading">Loading album info...</p>
+        <div v-else-if="album_info.name">
           <img :src="`${album_info['images'][0]['url']}`">
           <p id="album-title">{{ album_info.name }}</p>
           <p id="artists">{{ artist_string(album_info.artists) }}</p>
           <div v-for="track in album_info['tracks']['items']">
-            <p>{{ track.track_number }}. <a v-bind:href="`${track['external_urls']['spotify']}`">{{ track.name }}</a></p>
+            <p>{{ track.track_number }}. <a v-bind:href="`${track['external_urls']['spotify']}`" target="_bind">{{ track.name }}</a></p>
           </div>
         </div>
       </div>
       <div class="review-column">
-        <Review :review="temp_review" :show-album="true" v-for="i in [1,2,3,4,5]"/>
+        <Review :review="temp_review" :show-album="true" v-for="i in [1,2,3,4,5,6,7,8,9]"/>
       </div>
     </div>
 </template>
