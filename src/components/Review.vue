@@ -1,8 +1,5 @@
 <script lang="ts">
-// import { defineProps } from 'vue';
 import { PropType } from 'vue';
-// import Album from './Album.vue';
-// import Album from './Album.vue';
 // TODO: likely revise this data structure, adding necessary info from the API
 type ReviewData = {
   id: Number,
@@ -14,8 +11,6 @@ type ReviewData = {
   rating: Number,
   body: String,
 }
-// import { computed } from 'vue'
-// import { useRoute, useRouter } from 'vue-router'
 
 export default {
   name: 'Review',
