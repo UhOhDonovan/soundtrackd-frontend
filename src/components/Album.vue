@@ -29,6 +29,7 @@ export default {
       q: "",
       is_loading: false,
       spotify_id: this.$route.params.id,
+      is_writing: false,
       temp_review: {
         id: 123124211,
         posted_by: "SpooderNoob",
@@ -82,7 +83,30 @@ export default {
         </div>
       </div>
       <div class="review-column">
-        <Review :review="temp_review" :show-album="true" v-for="i in [1,2,3,4,5,6,7,8,9]"/>
+        <div class="write-container" v-if="is_writing">
+          <div class="review-col-header" style="justify-content: space-between;">
+            <button class="button" @click="is_writing = false">Cancel</button>
+            <h1>Write a Review</h1>
+            <button class="button" @click="is_writing = false">Publish Review</button>
+          </div>
+          <div class="review-form">
+            <strong class="review-title">[user]'s review of {{ album_info.name }}</strong>
+            <div>
+              <label for="rating">Rating (optional, 1-10): <input id="rating" type="number" min=1 max=10 style="font-size: 1em"></label>
+            </div>
+            <div>
+              <label for="review-text">Review content:</label>
+              <textarea id="review-text"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="read-container" v-else="!is_writing">
+          <div class="review-col-header">
+            <h1>Reviews</h1>
+            <button class="button" @click="is_writing = true" style="margin: 40px; margin-top: 50px; margin-left: 20px;">Write Review</button>
+          </div>
+          <Review :review="temp_review" :show-album="true" v-for="i in [1,2,3,4,5,6,7,8,9]"/>
+        </div>
       </div>
     </div>
 </template>
@@ -100,6 +124,9 @@ body {
     display: flex;
     overflow-x: auto;
     white-space: wrap;
+}
+h1 {
+  padding-left: 20px;
 }
 
 .album-column {
@@ -135,23 +162,9 @@ body {
   clear: both;
 }
 
-/* Style the counter cards */
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
-  border-radius: 15px;
-  padding: 16px;
-  margin: 20px;
-  text-align: center;
-  background-color: #f1f1f1;
-  transition: background-color 0.3s ease;
-}
 img {
   width: 75%;
   height: auto;
-}
-
-.card:hover {
-  background-color: #e0e0e0;
 }
 
 #album-title {
@@ -188,5 +201,30 @@ img {
   -moz-animation: flickerAnimation 1.25s infinite;
   -o-animation: flickerAnimation 1.25s infinite;
   animation: flickerAnimation 1.25s infinite;
+}
+
+.review-col-header {
+  display: flex;
+  width: 100%;
+  justify-content: left;
+}
+
+.button {
+  height: 50px;
+  margin-top: 50px;
+}
+
+textarea {
+  resize: none;
+  width: 100%;
+  min-height: 50vh;
+  font-family: inherit;
+  padding: 10px;
+  font-size: 1em;
+}
+
+.review-form {
+  font-size: 1.25em;
+  text-align: left;
 }
 </style>
