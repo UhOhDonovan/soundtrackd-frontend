@@ -25,11 +25,10 @@ export default {
           ]
         }
       },
-      url_root: "http://localhost:5345/search/album/id?id=",
+      url_root: "http://localhost:5345/",
       q: "",
       is_loading: false,
       spotify_id: this.$route.params.id,
-      is_writing: false,
       temp_review: {
         id: 123124211,
         posted_by: "SpooderNoob",
@@ -40,12 +39,15 @@ export default {
         body: "This is a  crazy review about the album on this page! It was so crazy and wild ot listen to it! What a crazy world we live in.",
       },
       show_album: false,
+      is_writing: false,
+      written_rating: undefined,
+      written_body: "",
     }
   },
   methods: {
-    get() {
+    get_album() {
       this.is_loading = true;
-      fetch(this.url_root + this.spotify_id)
+      fetch(this.url_root + "search/album/id?id=" +this.spotify_id)
       .then(res => res.json())
       .then(data => {this.album_info = data;
         this.is_loading = false
@@ -61,10 +63,44 @@ export default {
       }
       result += artists[artists.length - 1]["name"]
       return result
+    },
+    close_review(){
+      this.written_rating = undefined;
+      this.written_body = "";
+      this.is_writing = false;
+    },
+    submit_review(){
+      // fetch()
+      // THIS DOES NOT WORK
+      if (this.written_body || this.written_rating){
+        let new_review = {
+          album_spotify_id: this.id,
+          rating: this.written_rating,
+          body: this.written_body
+        }
+        let data = {
+          submission: new_review,
+          session: undefined,
+          current_user: undefined,
+        }
+        fetch(this.url_root + "review/write", {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Basic asdvapewuvrhfweaif',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          this.close_review();
+        })
+      }
     }
   },
   mounted(){
-    this.get()
+    this.get_album()
   }
 }
 </script>
@@ -85,18 +121,18 @@ export default {
       <div class="review-column">
         <div class="write-container" v-if="is_writing">
           <div class="review-col-header" style="justify-content: space-between;">
-            <button class="button" @click="is_writing = false">Cancel</button>
+            <button class="button" @click="close_review()">Cancel</button>
             <h1>Write a Review</h1>
-            <button class="button" @click="is_writing = false">Publish Review</button>
+            <button class="button" @click="submit_review()">Publish Review</button>
           </div>
           <div class="review-form">
             <strong class="review-title">[user]'s review of {{ album_info.name }}</strong>
             <div>
-              <label for="rating">Rating (optional, 1-10): <input id="rating" type="number" min=1 max=10 style="font-size: 1em"></label>
+              <label for="rating">Rating (optional, 1-10): <input id="rating" v-model="written_rating" type="number" min=1 max=10 style="font-size: 1em"></label>
             </div>
             <div>
               <label for="review-text">Review content:</label>
-              <textarea id="review-text"></textarea>
+              <textarea id="review-text" v-model="written_body"></textarea>
             </div>
           </div>
         </div>
@@ -150,16 +186,6 @@ h1 {
     padding: 10px;
     box-sizing: border-box;
     overflow-y: auto;
-}
-
-/* Remove extra left and right margins, due to padding in columns */
-.row {margin: 10px -5px 20px;}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
 }
 
 img {
