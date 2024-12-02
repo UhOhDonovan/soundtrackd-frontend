@@ -8,6 +8,7 @@ import Search from "./components/Search.vue";
 import Register from "./components/Register.vue";
 import Login from "./components/Login.vue";
 import Album from "./components/Album.vue";
+import Profile from "./components/Profile.vue";
 
 const routes = [
   { path: "/", name: 'HelloWorld', component: HelloWorld, props: {
@@ -17,6 +18,8 @@ const routes = [
   { path: "/register", name: 'Register', component: Register},
   { path: "/login", name: 'Login', component: Login},
   { path: "/album/:id", name: 'Album', component: Album, props: true},
+  { path: "/profile/:viewed_user", name: 'Profile', component: Profile, props: true},
+
 
 ];
 

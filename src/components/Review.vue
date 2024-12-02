@@ -47,7 +47,7 @@ export default {
       <div v-else-if="review">
         <div class="review-header">
           <div class="description">
-            <strong>{{ review.id }}'s review<span v-if="showAlbum"> of <RouterLink :to="{name: 'Album', params: {id: review.album_spotify_id}}">[album name]</RouterLink></span></strong>
+            <strong><RouterLink :to="{name: 'Profile', params: {viewed_user: review.posted_by}}">{{review.posted_by}}'s</RouterLink> review<span v-if="showAlbum"> of <RouterLink :to="{name: 'Album', params: {id: review.album_spotify_id}}">[album name]</RouterLink></span></strong>
           </div>
           <p id="rating" v-if="review.rating">Rating: {{ review.rating }}</p>
         </div>
