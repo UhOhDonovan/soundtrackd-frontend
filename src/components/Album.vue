@@ -71,8 +71,13 @@ export default {
     },
     artist_string(artists: {name: string}[]) {
       let result = "";
-      for (let i = 0; i < artists.length - 1; i++){
-        result += artists[i].name + ", "
+      if (artists.length > 2){
+        for (let i = 0; i < artists.length - 1; i++){
+          result += artists[i].name + ", "
+        }
+      }
+      else if (artists.length == 2){
+        result += artists[0].name + " "
       }
       if (result !== ""){
         result += "and "
@@ -159,13 +164,13 @@ export default {
           <h1>Reviews</h1>
           <button class="button" @click="is_writing = true" style="margin: 40px; margin-top: 50px; margin-left: 20px;">Write Review</button>
         </div>
-        <p class="search-progress" v-if="is_loading">Loading album info...</p>
+        <p class="search-progress" v-if="is_loading">Loading album reviews...</p>
         <Review v-else-if="reviews.length > 0" v-for="review in reviews" :review="review" :show-album="false"/>
         <div v-else style="font-size: 2em">
           <p>No reviews found.</p>
           <p>Be the first to write one!</p>
         </div>
-        <p v-for="review in reviews"> {{ review }}</p> <!-- Hide metadata by default -->
+        <p v-for="review in reviews" hidden="false"> {{ review }}</p> <!-- Hide metadata by default -->
       </div>
     </div>
     </div>
