@@ -1,22 +1,22 @@
 <script lang="ts">
-import { PropType } from 'vue';
+import { PropType } from "vue";
 // TODO: likely revise this data structure, adding necessary info from the API
 type ReviewData = {
-  id: Number,
-  rating: Number,
-  post_time: String,
-  album_spotify_id: String,
-  posted_by: String,
-  post_date: String,
-  body: String,
+  id: Number;
+  rating: Number;
+  post_time: String;
+  album_spotify_id: String;
+  posted_by: String;
+  post_date: String;
+  body: String;
   album_info: {
-            "title": String,
-            "cover_url": String,
-        }
-}
+    title: String;
+    cover_url: String;
+  };
+};
 
 export default {
-  name: 'Review',
+  name: "Review",
   props: {
     id: String,
     review: Object as PropType<ReviewData>,
@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       is_loading: false,
-    }
+    };
   },
   methods: {
     // TODO: Replace with function to retrieve review from id
@@ -38,33 +38,59 @@ export default {
     //   })
     // }
   },
-  mounted(){
+  mounted() {
     // this.get()
-  }
-}
+  },
+};
 </script>
 
 <template>
   <div class="review">
-      <p class="search-progress" v-if="is_loading">Loading review info</p>
-      <div v-else-if="review" style="display: flex">
-        <div v-if="showAlbum && review.album_info.cover_url" style="width: 20%; margin: 1%">
-          <img :src="`${review.album_info.cover_url}`">
+    <p class="search-progress" v-if="is_loading">Loading review info</p>
+    <div v-else-if="review" style="display: flex">
+      <div
+        v-if="showAlbum && review.album_info.cover_url"
+        style="width: 20%; margin: 1%"
+      >
+        <img :src="`${review.album_info.cover_url}`" />
+      </div>
+      <div style="width: 100%">
+        <div
+          class="review-header"
+          style="margin-left: 20px; margin-right: 20px"
+        >
+          <div class="description">
+            <strong
+              ><RouterLink
+                :to="{
+                  name: 'Profile',
+                  params: { viewed_user: review.posted_by as string},
+                }"
+                >{{ review.posted_by as string }}</RouterLink
+              >'s review<span v-if="showAlbum">
+                of
+                <RouterLink
+                  :to="{
+                    name: 'Album',
+                    params: { id: review.album_spotify_id as string },
+                  }"
+                  >{{ review.album_info.title as string }}</RouterLink
+                ></span
+              ></strong
+            >
+          </div>
+          <p id="rating" v-if="review.rating">Rating: {{ review.rating }}</p>
         </div>
-        <div style="width:100%">
-          <div class="review-header" style="margin-left:20px; margin-right: 20px">
-            <div class="description">
-              <strong><RouterLink :to="{name: 'Profile', params: {viewed_user: review.posted_by}}">{{review.posted_by}}</RouterLink>'s review<span v-if="showAlbum"> of <RouterLink :to="{name: 'Album', params: {id: review.album_spotify_id}}">{{review.album_info.title}}</RouterLink></span></strong>
-            </div>
-            <p id="rating" v-if="review.rating">Rating: {{ review.rating }}</p>
-          </div>
-          <hr style="margin: 0%">
-          <div class="review-content" style="margin-left:20px; margin-right:20px">
-            <p id="text">"{{ review.body }}"</p>
-          </div>
+        <hr style="margin: 0%" />
+        <div
+          class="review-content"
+          style="margin-left: 20px; margin-right: 20px"
+        >
+          <p id="text">"{{ review.body }}"</p>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <style scoped>
@@ -81,24 +107,48 @@ a {
   font-weight: bold;
 }
 @keyframes flickerAnimation {
-  0%   { opacity:1; }
-  50%  { opacity:0.25; }
-  100% { opacity:1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-@-o-keyframes flickerAnimation{
-  0%   { opacity:1; }
-  50%  { opacity:0.25; }
-  100% { opacity:1; }
+@-o-keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-@-moz-keyframes flickerAnimation{
-  0%   { opacity:1; }
-  50%  { opacity:0.25; }
-  100% { opacity:1; }
+@-moz-keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-@-webkit-keyframes flickerAnimation{
-  0%   { opacity:1; }
-  50%  { opacity:0.25; }
-  100% { opacity:1; }
+@-webkit-keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .search-progress {
@@ -121,7 +171,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  overflow-x:visible;
+  overflow-x: visible;
 }
 .post-header img {
   border-radius: 50%;
