@@ -18,7 +18,7 @@
   </nav>
   
   <main>
-    <RouterView />
+    <RouterView :key="$route.fullPath"/>
   </main>
   <br>
   <h5>Current route path: {{ $route.fullPath }}</h5>

@@ -1,13 +1,13 @@
 <script lang="ts">
-import { defineProps } from 'vue';
+import Review from "./Review.vue";
 
-// import { computed } from 'vue'
-// import { useRoute, useRouter } from 'vue-router'
-defineProps({
-  id: String
-})
 
 export default {
+  name: 'Album',
+  components: {Review},
+  props: {
+    id: String,
+  },
   data() {
     return {
       album_info: {
@@ -25,46 +25,141 @@ export default {
           ]
         }
       },
-      url_root: "http://localhost:5345/search/album/id?id=",
+      url_root: "http://localhost:5345/",
       q: "",
       is_loading: false,
-      spotify_id: this.$route.params.id
+      reviews_loading: false,
+      spotify_id: this.$route.params.id,
+      reviews: [{id: 123124211,
+        posted_by: "Admin",
+        album_spotify_id: "1woCvthHJakakroP6dXNxs",
+        post_date: "11/24/2024",
+        post_time: "7:55 PM",
+        rating: 9,
+        body: "This is a crazy review about the album on this page (for testing purposes)!",
+      }],
+      show_album: false,
+      is_writing: false,
+      written_rating: undefined,
+      written_body: "",
     }
   },
   methods: {
-    get() {
+    get_album() {
       this.is_loading = true;
-      fetch(this.url_root + this.spotify_id)
+      fetch(this.url_root + "search/album/id?id=" +this.spotify_id)
       .then(res => res.json())
       .then(data => {this.album_info = data;
         this.is_loading = false
       })
+    },
+    get_reviews() {
+      this.reviews_loading = true;
+      fetch(this.url_root + "review/list/" +this.spotify_id)
+      .then(res => res.json())
+      .then(data => {
+        for (let i=0; i < data.length; i++){
+          this.reviews.push(data[i]);
+        };
+        this.reviews_loading = false
+      })
+    },
+    artist_string(artists: {name: string}[]) {
+      let result = "";
+      for (let i = 0; i < artists.length - 1; i++){
+        result += artists[i].name + ", "
+      }
+      if (result !== ""){
+        result += "and "
+      }
+      result += artists[artists.length - 1]["name"]
+      return result
+    },
+    close_review(){
+      this.written_rating = undefined;
+      this.written_body = "";
+      this.is_writing = false;
+    },
+    async submit_review(){
+      if (this.written_body || this.written_rating){
+        const response = await fetch(`http://localhost:5345/review/write`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ 
+            "album_spotify_id": this.id,
+            "body": this.written_body,
+            "rating": this.written_rating,
+          }),
+        });
+
+        console.log(response.json());
+        if (!response.ok) {
+          let error = response.statusText;
+          console.log(`Error: ${error}`);
+        } else {
+          const token = await response.json();
+          console.log(token)
+        }
+        console.log(response.ok);
+      }
     }
   },
   mounted(){
-    this.get()
+    this.get_album(),
+    this.get_reviews()
   }
 }
 </script>
 
 <template>
-    <p class="search-progress" v-if="is_loading">Loading album info</p>
-    <div class="container">
-      <div class="album-column">
-        <div v-if="album_info.name">
-          <p id="album-title">{{ album_info.name }}</p>
-          <img :src="`${album_info['images'][0]['url']}`">
-          <div v-for="track in album_info['tracks']['items']">
-            <p>{{ track.track_number }}. <a v-bind:href="`${track['external_urls']['spotify']}`">{{ track.name }}</a></p>
+  <div class="container">
+    <div class="album-column">
+      <p class="search-progress" v-if="is_loading">Loading album info...</p>
+      <div v-else-if="album_info.name">
+        <img :src="`${album_info['images'][0]['url']}`">
+        <p id="album-title">{{ album_info.name }}</p>
+        <p id="artists">{{ artist_string(album_info.artists) }}</p>
+        <div v-for="track in album_info['tracks']['items']">
+          <p>{{ track.track_number }}. <a v-bind:href="`${track['external_urls']['spotify']}`" target="_bind">{{ track.name }}</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="review-column">
+      <div class="write-container" v-if="is_writing">
+        <div class="review-col-header" style="justify-content: space-between;">
+          <button class="button" @click="close_review()">Cancel</button>
+          <h1>Write a Review</h1>
+          <button class="button" @click="submit_review()">Publish Review</button>
+        </div>
+        <div class="review-form">
+          <strong class="review-title">[user]'s review of {{ album_info.name }}</strong>
+          <div>
+            <label for="rating">Rating (optional, 1-10): <input id="rating" v-model="written_rating" type="number" min=1 max=10 style="font-size: 1em"></label>
+          </div>
+          <div>
+            <label for="review-text">Review content:</label>
+            <textarea id="review-text" v-model="written_body"></textarea>
           </div>
         </div>
       </div>
-      <div class="review-column">
-        <div class="card" v-for="i in [1,2,3,4,5]">review_{{ i }}</div>
+      <div class="read-container" v-else="!is_writing">
+        <div class="review-col-header">
+          <h1>Reviews</h1>
+          <button class="button" @click="is_writing = true" style="margin: 40px; margin-top: 50px; margin-left: 20px;">Write Review</button>
+        </div>
+        <p class="search-progress" v-if="is_loading">Loading album info...</p>
+        <Review v-else-if="reviews.length > 0" v-for="review in reviews" :review="review" :show-album="false"/>
+        <div v-else style="font-size: 2em">
+          <p>No reviews found.</p>
+          <p>Be the first to write one!</p>
+        </div>
       </div>
     </div>
+    </div>
 </template>
-
 <style scoped>
 * {
   box-sizing: border-box;
@@ -77,7 +172,10 @@ body {
 .container {
     display: flex;
     overflow-x: auto;
-    white-space: nowrap;
+    white-space: wrap;
+}
+h1 {
+  padding-left: 20px;
 }
 
 .album-column {
@@ -85,59 +183,35 @@ body {
     width: 30%;
     height: 100vh;
     border: 1px solid #ccc;
-    margin-right: 10px;
+    /* margin-right: 10px; */
     padding: 10px;
     box-sizing: border-box;
     overflow-y: auto;
+    /* overflow-x: hidden; */
+    /* white-space: wrap; */
 }
 .review-column {
     flex: 0 0 auto;
     width: 70%;
     height: 100vh;
     border: 1px solid #ccc;
-    margin-right: 10px;
+    /* margin-right: 10px; */
     padding: 10px;
     box-sizing: border-box;
     overflow-y: auto;
 }
-/* Float four columns side by side */
-/* .column {
-  float: left;
-  width: 100%;
-  padding: 0 10px;
-} */
 
-/* Remove extra left and right margins, due to padding in columns */
-.row {margin: 10px -5px 20px;}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-/* Style the counter cards */
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
-  border-radius: 15px;
-  padding: 16px;
-  text-align: center;
-  background-color: #f1f1f1;
-  transition: background-color 0.3s ease;
-}
 img {
-  width: 100%;
+  width: 75%;
   height: auto;
-}
-
-.card:hover {
-  background-color: #e0e0e0;
 }
 
 #album-title {
   font-weight: bold;
   font-size: 15pt;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word
 }
 
 @keyframes flickerAnimation {
@@ -166,5 +240,30 @@ img {
   -moz-animation: flickerAnimation 1.25s infinite;
   -o-animation: flickerAnimation 1.25s infinite;
   animation: flickerAnimation 1.25s infinite;
+}
+
+.review-col-header {
+  display: flex;
+  width: 100%;
+  justify-content: left;
+}
+
+.button {
+  height: 50px;
+  margin-top: 50px;
+}
+
+textarea {
+  resize: none;
+  width: 100%;
+  min-height: 50vh;
+  font-family: inherit;
+  padding: 10px;
+  font-size: 1em;
+}
+
+.review-form {
+  font-size: 1.25em;
+  text-align: left;
 }
 </style>
