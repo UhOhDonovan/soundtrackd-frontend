@@ -50,6 +50,7 @@ export default {
       is_writing: false,
       written_rating: undefined,
       written_body: "",
+      username: localStorage.getItem('username'),
     }
   },
   methods: {
@@ -87,6 +88,17 @@ export default {
       }
       result += artists[artists.length - 1]["name"]
       return result
+    },
+    open_write(){
+      this.username = localStorage.getItem('username')
+      if (this.username !== ''){
+        console.log("username non-empty")
+        this.is_writing = true
+      }
+      else{
+        console.log("else")
+        alert("You must log in to write album reviews.")
+      }
     },
     close_review(){
       this.written_rating = undefined;
@@ -126,7 +138,12 @@ export default {
   },
   mounted(){
     this.get_album(),
-    this.get_reviews()
+    this.get_reviews(),
+    window.addEventListener('user-changed', (event) => {
+      console.log("event recieved")
+      this.username = (<any>event).detail.storage;
+      this.close_review()
+    });
   }
 }
 </script>
@@ -153,7 +170,7 @@ export default {
           <button class="button" @click="submit_review()">Publish Review</button>
         </div>
         <div class="review-form">
-          <strong class="review-title">[user]'s review of {{ album_info.name }}</strong>
+          <strong class="review-title">{{username}}'s review of {{ album_info.name }}</strong>
           <div>
             <label for="rating">Rating (optional, 1-10): <input id="rating" name="rating" v-model="written_rating" type="number" min=1 max=10 style="font-size: 1em"></label>
           </div>
@@ -166,7 +183,7 @@ export default {
       <div class="read-container" v-else="!is_writing">
         <div class="review-col-header">
           <h1>Reviews</h1>
-          <button class="button" @click="is_writing = true" style="margin: 40px; margin-top: 50px; margin-left: 20px;">Write Review</button>
+          <button class="button" @click="open_write()" style="margin: 40px; margin-top: 50px; margin-left: 20px;">Write Review</button>
         </div>
         <p class="search-progress" v-if="is_loading">Loading album reviews...</p>
         <Review v-else-if="reviews.length > 0" v-for="review in reviews" :review="review" :show-album="false"/>
