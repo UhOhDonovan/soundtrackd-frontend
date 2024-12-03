@@ -31,7 +31,7 @@ const sendInfo = async (
     password_confirmation: password_confirmation,
   };
 
-  const response = await fetch(`http://localhost:5345/users/register`, {
+  const response = await fetch(`/api/users/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

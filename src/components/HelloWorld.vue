@@ -1,5 +1,6 @@
 <script lang="ts">
 // import { ref } from 'vue'
+<<<<<<< HEAD
 export default {
   props: {
     msg: String,
@@ -24,6 +25,17 @@ export default {
       this.username = (<any>event).detail.storage;
     });
   }
+=======
+let test = localStorage.getItem("token")
+
+defineProps<{ msg: string }>()
+
+const testAPI = async () => {
+  const response = await fetch("/api", {
+    method: "GET"
+  })
+  console.log(await response.json())
+>>>>>>> main
 }
 </script>
 

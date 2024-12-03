@@ -8,7 +8,7 @@ export default {
         artists: [{name: ''}],
         images: [{url: ''}]
       }],
-      url_root: "http://localhost:5345/search/album",
+      url_root: "/api/search/album",
       q: "",
       is_searching: false
     }

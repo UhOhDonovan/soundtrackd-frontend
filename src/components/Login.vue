@@ -19,7 +19,7 @@ const sendInfo = async (username: string, password: string) => {
     password: password,
   };
 
-  const response = await fetch(`http://localhost:5345/users/token`, {
+  const response = await fetch(`/api/users/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -47,7 +47,7 @@ const sendInfo = async (username: string, password: string) => {
 };
 
 const testToken = async () => {
-  const response = await fetch("http://localhost:5345/users/me", {
+  const response = await fetch("/api/users/me", {
     method: "GET",
     headers: {
       "accept": "application/json",
