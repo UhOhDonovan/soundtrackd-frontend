@@ -104,9 +104,13 @@ export default {
         if (!response.ok) {
           let error = response.statusText;
           console.log(`Error: ${error}`);
+          if(error === "Unauthorized"){
+            console.log("Your session has expired, please log in again.")
+            let password = prompt("Your session has expired. Please re-enter your password to continue.")
+          }
         } else {
-          const token = await response.json();
-          console.log(token)
+          this.close_review()
+          this.get_reviews()
         }
         console.log(response.ok);
       }
@@ -161,7 +165,7 @@ export default {
           <p>No reviews found.</p>
           <p>Be the first to write one!</p>
         </div>
-        <p v-for="review in reviews" hidden="true"> {{ review }}</p> <!-- Hide metadata by default -->
+        <p v-for="review in reviews"> {{ review }}</p> <!-- Hide metadata by default -->
       </div>
     </div>
     </div>

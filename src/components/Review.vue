@@ -100,8 +100,8 @@ export default {
 img {
   width: 100%;
   height: auto;
-  min-height: 150px;
-  min-width: 150px;
+  min-height: 100px;
+  min-width: 100px;
 }
 a {
   font-weight: bold;
@@ -181,5 +181,8 @@ a {
 }
 .review-content {
   margin-top: 10px;
+}
+.rating {
+  margin-left: 10px;
 }
 </style>
