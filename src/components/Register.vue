@@ -1,42 +1,65 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+
 const router = useRouter()
 
 let email = ""
 let username = ""
 let password = ""
-let error = ""
+let confirmPassword = ""
+let error = ref("")
 
 function register() {
-  if (password.length < 3) {
-    console.log("password too short");
+  // check for any obvious errors in the user's submission
+  if(email.length == 0) {
+    console.log("Please enter an email")
+    error.value = "Please enter an email"
   }
+  else if(username.length == 0) {
+    console.log("Please enter a username")
+    error.value = "Please enter a username"
+  }
+  else if(password.length == 0) {
+    console.log("Please enter a password")
+    error.value = "Please enter a password"
+  }
+  else if(confirmPassword.length == 0) {
+    console.log("Please confirm your password")
+    error.value = "Please confirm password"
+  }
+  else if (password.length < 10) {
+    console.log("password too short")
+    error.value = "Your password is too short (must be at least 10 characters)"
+  }
+  else if (password != confirmPassword) {
+    console.log("passwords do not match")
+    error.value = "Your password does not match its confirmation"
+  }
+  // we are good to go!
   else {
+    //router.push({ path: '/login' })
     sendInfo(email, username, password)
-    //router.push({ path: '/login'})
   }
 }
 
 const sendInfo = async (email: string, username: string, password: string) => {
-  // IK this is sketchy but it's the only way I could get it to work
-  const request = {
-    email: email,
-    username: username,
-    password: password,
-  }
-
   const response = await fetch(`http://localhost:5345/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(request)
-  })
+    body: JSON.stringify({
+    "email": email,
+    "username": username,
+    "password": password,
+    }),
+  });
 
   console.log(response)
   if (!response.ok) {
-    error = response.statusText
-    console.log(`Error: ${error}`)
+    error.value = response.statusText
+    console.log(`Error: ${error.value}`)
   }
   else {
     router.push({ path: '/login' })
@@ -50,7 +73,6 @@ const sendInfo = async (email: string, username: string, password: string) => {
 <template>
   <div>
     <h2>Create your account!</h2>
-    <p class="error-text">{{ error }}</p>
     <form @submit.prevent="register">
       <div class="form-group">
         <label for="email">Email: </label>
@@ -64,6 +86,13 @@ const sendInfo = async (email: string, username: string, password: string) => {
         <label for="password">Password: </label>
         <input type="password" name="password" v-model="password">
       </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password: </label>
+        <input type="password" name="confirmPassword" v-model="confirmPassword">
+      </div>
+      <div v-if="error" id="error-message" style="color: red; margin-top: 10px;">
+        {{ error }}
+      </div>    
       <br>
       <button type="submit" class="button">Register</button>
     </form>

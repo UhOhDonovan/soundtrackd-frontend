@@ -1,15 +1,27 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+
 // import Cookies from "js-cookie";
 const router = useRouter()
 
 let userfield: string = "";
 let password: string = "";
-let error: string = "";
+let error = ref("");
 
 function login() {
   console.log("login was clicked");
-  sendInfo(userfield, password);
+  if(userfield.length == 0) {
+    console.log("Please enter a username")
+    error.value = "Please enter a username"
+  }
+  else if(password.length == 0) {
+    console.log("Please enter a password")
+    error.value = "Please enter a password"
+  }
+  else{
+    sendInfo(userfield, password);
+  }
 }
 
 const sendInfo = async (userfield: string, password: string) => {
@@ -19,7 +31,7 @@ const sendInfo = async (userfield: string, password: string) => {
     password: password,
   }
 
-  const response = await fetch(`http://localhost:5345/login`, {
+  const response = await fetch(`http://localhost:5345/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -29,8 +41,8 @@ const sendInfo = async (userfield: string, password: string) => {
 
   console.log(response)
   if (!response.ok) {
-    error = response.statusText
-    console.log(`Error: ${error}`)
+    error.value = response.statusText
+    console.log(`Error: ${error.value}`)
   }
   else {
     router.push({ path: '/' })
@@ -49,6 +61,9 @@ const sendInfo = async (userfield: string, password: string) => {
     <label for="password">Password: </label>
     <input type="password" name="password" class="field" v-model="password">
     <br>
+    <div v-if="error" id="error-message" style="color: red; margin-top: 10px;">
+      {{ error }}
+    </div>    
     <button @click="login" class="button">Login</button>
     <p>Don't have an account? <RouterLink to="/register">Create one!</RouterLink>
     </p>
