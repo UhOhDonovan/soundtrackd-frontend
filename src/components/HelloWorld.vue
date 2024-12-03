@@ -1,6 +1,8 @@
 <script setup lang="ts">
 // import { ref } from 'vue'
 
+let test = localStorage.getItem("token")
+
 defineProps<{ msg: string }>()
 
 const testAPI = async () => {
@@ -27,6 +29,7 @@ const testAPI = async () => {
         tester
       </button>
     </div>
+    <p>{{test }}</p>
   </div>
 </template>
 
