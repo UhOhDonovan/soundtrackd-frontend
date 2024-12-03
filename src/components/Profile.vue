@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      url_root: "http://localhost:5345/",
+      url_root: "/api/",
       is_loading: false,
       review_list: new Array<ReviewData>,
       show_album: true,

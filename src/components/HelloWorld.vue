@@ -1,12 +1,11 @@
 <script setup lang="ts">
 // import { ref } from 'vue'
-
 let test = localStorage.getItem("token")
 
 defineProps<{ msg: string }>()
 
 const testAPI = async () => {
-  const response = await fetch("http://localhost:5345/", {
+  const response = await fetch("/api", {
     method: "GET"
   })
   console.log(await response.json())

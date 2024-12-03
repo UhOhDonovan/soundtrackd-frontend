@@ -40,7 +40,7 @@ export default {
           ]
         }
       },
-      url_root: "http://localhost:5345/",
+      url_root: "/api/",
       q: "",
       is_loading: false,
       reviews_loading: false,
@@ -95,7 +95,7 @@ export default {
     },
     async submit_review(){
       if (this.written_body || this.written_rating){
-        const response = await fetch(`http://localhost:5345/review/write`, {
+        const response = await fetch(`/api/review/write`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -114,7 +114,7 @@ export default {
           console.log(`Error: ${error}`);
           if(error === "Unauthorized"){
             console.log("Your session has expired, please log in again.")
-            let password = prompt("Your session has expired. Please re-enter your password to continue.")
+            // let password = prompt("Your session has expired. Please re-enter your password to continue.")
           }
         } else {
           this.close_review()
