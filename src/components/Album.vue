@@ -161,7 +161,7 @@ export default {
           <p>No reviews found.</p>
           <p>Be the first to write one!</p>
         </div>
-        <p v-for="review in reviews"> {{ review }}</p>
+        <p v-for="review in reviews" hidden="true"> {{ review }}</p> <!-- Hide metadata by default -->
       </div>
     </div>
     </div>
