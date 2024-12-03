@@ -7,9 +7,12 @@ type ReviewData = {
   post_time: String,
   album_spotify_id: String,
   posted_by: String,
-  // album_name: String,
   post_date: String,
   body: String,
+  album_info: {
+            "title": String,
+            "cover_url": String,
+        }
 }
 
 export default {
@@ -44,21 +47,39 @@ export default {
 <template>
   <div class="review">
       <p class="search-progress" v-if="is_loading">Loading review info</p>
-      <div v-else-if="review">
-        <div class="review-header">
-          <div class="description">
-            <strong>{{ review.posted_by }}'s review<span v-if="showAlbum"> of <RouterLink :to="{name: 'Album', params: {id: review.album_spotify_id}}">[album name]</RouterLink></span></strong>
-          </div>
-          <p id="rating" v-if="review.rating">Rating: {{ review.rating }}</p>
+      <div v-else-if="review" style="display: flex">
+        <div v-if="showAlbum && review.album_info.cover_url" style="width: 20%; margin: 1%">
+          <img :src="`${review.album_info.cover_url}`">
         </div>
-        <div class="review-content">
-          <p id="text">"{{ review.body }}"</p>
+        <div style="width:100%">
+          <div class="review-header" style="margin-left:20px; margin-right: 20px">
+            <div class="description">
+              <strong><RouterLink :to="{name: 'Profile', params: {viewed_user: review.posted_by}}">{{review.posted_by}}</RouterLink>'s review<span v-if="showAlbum"> of <RouterLink :to="{name: 'Album', params: {id: review.album_spotify_id}}">{{review.album_info.title}}</RouterLink></span></strong>
+            </div>
+            <p id="rating" v-if="review.rating">Rating: {{ review.rating }}</p>
+          </div>
+          <hr style="margin: 0%">
+          <div class="review-content" style="margin-left:20px; margin-right:20px">
+            <p id="text">"{{ review.body }}"</p>
+          </div>
         </div>
       </div>
     </div>
 </template>
 
 <style scoped>
+* {
+  font-size: 1.05em;
+}
+img {
+  width: 100%;
+  height: auto;
+  min-height: 150px;
+  min-width: 150px;
+}
+a {
+  font-weight: bold;
+}
 @keyframes flickerAnimation {
   0%   { opacity:1; }
   50%  { opacity:0.25; }
@@ -89,7 +110,8 @@ export default {
 
 .review {
   border: 1px solid #ccc;
-  padding: 20px;
+  /* padding-left: 20px;
+  padding-right: 20px; */
   margin: 20px;
   border-radius: 10px;
   /* max-width: 600px; */
