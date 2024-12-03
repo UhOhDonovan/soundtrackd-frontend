@@ -29,7 +29,7 @@ const testAPI = async () => {
         tester
       </button>
     </div>
-    <p>{{test }}</p>
+    <p hidden="true">{{test }}</p>
   </div>
 </template>
 
