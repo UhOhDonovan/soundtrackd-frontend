@@ -155,11 +155,11 @@ export default {
         <div class="review-form">
           <strong class="review-title">[user]'s review of {{ album_info.name }}</strong>
           <div>
-            <label for="rating">Rating (optional, 1-10): <input id="rating" v-model="written_rating" type="number" min=1 max=10 style="font-size: 1em"></label>
+            <label for="rating">Rating (optional, 1-10): <input id="rating" name="rating" v-model="written_rating" type="number" min=1 max=10 style="font-size: 1em"></label>
           </div>
           <div>
-            <label for="review-text">Review content:</label>
-            <textarea id="review-text" v-model="written_body"></textarea>
+            <label for="review-body">Review content:</label>
+            <textarea id="review-text" name="review-body" v-model="written_body"></textarea>
           </div>
         </div>
       </div>

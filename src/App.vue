@@ -1,4 +1,17 @@
-<script setup lang="ts">
+<script lang="ts">
+export default {
+  data(){
+    return{
+      username: "",
+    }
+  },
+  mounted(){
+    window.addEventListener('user-changed', (event) => {
+      console.log("event recieved")
+      this.username = (<any>event).detail.storage;
+    });
+  }
+}
 </script>
 
 <template>
@@ -13,8 +26,10 @@
     </li>
     <li class="nav-link"><RouterLink to="/">Home</RouterLink></li>
     <li class="nav-link"><RouterLink to="/search">Search</RouterLink></li>
-    <li class="nav-link"><RouterLink to="/login">Log In</RouterLink></li>
-    <li class="nav-link"><RouterLink to="/register">Sign Up</RouterLink></li>
+    <li v-if="!username" class="nav-link"><RouterLink to="/login">Log In</RouterLink></li>
+    <li v-if="!username" class="nav-link"><RouterLink to="/register">Sign Up</RouterLink></li>
+    <li v-if="username" class="nav-link"><RouterLink :to="`/profile/${username}`">My Profile</RouterLink></li>
+
   </nav>
   
   <main>
