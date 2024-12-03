@@ -1,6 +1,18 @@
 <script lang="ts">
 import Review from "./Review.vue";
-
+type ReviewData = {
+  id: Number,
+  rating: Number,
+  post_time: String,
+  album_spotify_id: String,
+  posted_by: String,
+  post_date: String,
+  body: String,
+  album_info: {
+            "title": String,
+            "cover_url": String,
+        }
+}
 
 export default {
   name: 'Album',
@@ -30,14 +42,7 @@ export default {
       is_loading: false,
       reviews_loading: false,
       spotify_id: this.$route.params.id,
-      reviews: [{id: 123124211,
-        posted_by: "Admin",
-        album_spotify_id: "1woCvthHJakakroP6dXNxs",
-        post_date: "11/24/2024",
-        post_time: "7:55 PM",
-        rating: 9,
-        body: "This is a crazy review about the album on this page (for testing purposes)!",
-      }],
+      reviews: new Array<ReviewData>,
       show_album: false,
       is_writing: false,
       written_rating: undefined,
@@ -156,6 +161,7 @@ export default {
           <p>No reviews found.</p>
           <p>Be the first to write one!</p>
         </div>
+        <p v-for="review in reviews"> {{ review }}</p>
       </div>
     </div>
     </div>

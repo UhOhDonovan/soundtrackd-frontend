@@ -1,6 +1,20 @@
 <script lang="ts">
 import Review from "./Review.vue";
 
+type ReviewData = {
+  id: Number,
+  rating: Number,
+  post_time: String,
+  album_spotify_id: String,
+  posted_by: String,
+  post_date: String,
+  body: String,
+  album_info: {
+            "title": String,
+            "cover_url": String,
+        }
+}
+
 
 export default {
   name: 'Profile',
@@ -12,24 +26,7 @@ export default {
     return {
       url_root: "http://localhost:5345/",
       is_loading: false,
-      temp_review: {
-        id: 123124211,
-        posted_by: "SpooderNoob",
-        album_spotify_id: "1woCvthHJakakroP6dXNxs",
-        post_date: "11/24/2024",
-        post_time: "7:55 PM",
-        rating: 9,
-        body: "This is a  crazy review about the album on this page! It was so crazy and wild ot listen to it! What a crazy world we live in.",
-      },
-      review_list: [{
-        id: 123124211,
-        posted_by: "SpooderNoob",
-        album_spotify_id: "1woCvthHJakakroP6dXNxs",
-        post_date: "11/24/2024",
-        post_time: "7:55 PM",
-        rating: 9,
-        body: "This is a  crazy review about the album on this page! It was so crazy and wild ot listen to it! What a crazy world we live in.",
-      }],
+      review_list: new Array<ReviewData>,
       show_album: true,
     }
   },
@@ -57,7 +54,9 @@ export default {
 <template>
   <div style="margin-left:2.5%; margin-right:2.5%">
     <h1> {{ viewed_user }}'s Reviews</h1>
-    <Review v-for="review in review_list" :review="review" :show-album="true"/>
+    <p class="search-progress" v-if="is_loading">Loading reviews...</p>
+    <Review v-else-if="review_list" v-for="review in review_list" :review="review" :show-album="true"/>
+    <p v-else>No reviews found.</p>
   </div>
 </template>
 
