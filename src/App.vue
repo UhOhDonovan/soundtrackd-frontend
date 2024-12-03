@@ -17,7 +17,7 @@ export default {
       localStorage.setItem('token', "")
       window.dispatchEvent(new CustomEvent('user-changed', {
         detail: {
-          storage: localStorage.getItem('username')
+          storage: ''
         }
       }));
     }
