@@ -35,13 +35,16 @@ export default {
   },
   methods: {
     get_reviews() {
-      // NOT FUNCTIONAL
       this.is_loading = true;
-      // fetch(this.url_root + "search/album/id?id=" +this.spotify_id)
-      // .then(res => res.json())
-      // .then(data => {this.album_info = data;
-      //   this.is_loading = false
-      // })
+      // NEED TO MAKE API ENDPOINT TO GET BY USERNAME
+      fetch(this.url_root + "review/list/user/" + this.viewed_user)
+      .then(res => res.json())
+      .then(data => {
+        for (let i=0; i < data.length; i++){
+          this.review_list.push(data[i]);
+        };
+        this.is_loading = false
+      })
     },
 
   },
