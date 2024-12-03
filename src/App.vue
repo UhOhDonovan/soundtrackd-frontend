@@ -2,7 +2,7 @@
 export default {
   data(){
     return{
-      username: "",
+      username: localStorage.getItem('username'),
     }
   },
   mounted(){
@@ -10,6 +10,17 @@ export default {
       console.log("event recieved")
       this.username = (<any>event).detail.storage;
     });
+  },
+  methods: {
+    sign_out(){
+      localStorage.setItem('username', "")
+      localStorage.setItem('token', "")
+      window.dispatchEvent(new CustomEvent('user-changed', {
+        detail: {
+          storage: localStorage.getItem('username')
+        }
+      }));
+    }
   }
 }
 </script>
@@ -28,7 +39,8 @@ export default {
     <li class="nav-link"><RouterLink to="/search">Search</RouterLink></li>
     <li v-if="!username" class="nav-link"><RouterLink to="/login">Log In</RouterLink></li>
     <li v-if="!username" class="nav-link"><RouterLink to="/register">Sign Up</RouterLink></li>
-    <li v-if="username" class="nav-link"><RouterLink :to="`/profile/${username}`">My Profile</RouterLink></li>
+    <li v-if="username" class="nav-link"><RouterLink :to="`/profile/${username}`">My Profile ({{ username }})</RouterLink></li>
+    <li v-if="username" class="nav-link" id="sign-out"><a href="#" @click.prevent="sign_out()">Sign Out</a></li>
 
   </nav>
   
@@ -85,6 +97,13 @@ li {
 }
 
 .nav-link a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+#sign-out {
   display: block;
   color: white;
   text-align: center;
