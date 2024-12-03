@@ -3,12 +3,12 @@ import { PropType } from 'vue';
 // TODO: likely revise this data structure, adding necessary info from the API
 type ReviewData = {
   id: Number,
-  posted_by: String,
+  rating: Number,
+  post_time: String,
   album_spotify_id: String,
+  posted_by: String,
   // album_name: String,
   post_date: String,
-  post_time: String,
-  rating: Number,
   body: String,
 }
 
@@ -47,7 +47,7 @@ export default {
       <div v-else-if="review">
         <div class="review-header">
           <div class="description">
-            <strong>{{ review.id }}'s review<span v-if="showAlbum"> of <RouterLink :to="{name: 'Album', params: {id: review.album_spotify_id}}">[album name]</RouterLink></span></strong>
+            <strong>{{ review.posted_by }}'s review<span v-if="showAlbum"> of <RouterLink :to="{name: 'Album', params: {id: review.album_spotify_id}}">[album name]</RouterLink></span></strong>
           </div>
           <p id="rating" v-if="review.rating">Rating: {{ review.rating }}</p>
         </div>

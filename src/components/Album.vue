@@ -28,16 +28,16 @@ export default {
       url_root: "http://localhost:5345/",
       q: "",
       is_loading: false,
+      reviews_loading: false,
       spotify_id: this.$route.params.id,
-      temp_review: {
-        id: 123124211,
-        posted_by: "SpooderNoob",
+      reviews: [{id: 123124211,
+        posted_by: "Admin",
         album_spotify_id: "1woCvthHJakakroP6dXNxs",
         post_date: "11/24/2024",
         post_time: "7:55 PM",
         rating: 9,
-        body: "This is a  crazy review about the album on this page! It was so crazy and wild ot listen to it! What a crazy world we live in.",
-      },
+        body: "This is a crazy review about the album on this page (for testing purposes)!",
+      }],
       show_album: false,
       is_writing: false,
       written_rating: undefined,
@@ -51,6 +51,17 @@ export default {
       .then(res => res.json())
       .then(data => {this.album_info = data;
         this.is_loading = false
+      })
+    },
+    get_reviews() {
+      this.reviews_loading = true;
+      fetch(this.url_root + "review/list/" +this.spotify_id)
+      .then(res => res.json())
+      .then(data => {
+        for (let i=0; i < data.length; i++){
+          this.reviews.push(data[i]);
+        };
+        this.reviews_loading = false
       })
     },
     artist_string(artists: {name: string}[]) {
@@ -69,38 +80,36 @@ export default {
       this.written_body = "";
       this.is_writing = false;
     },
-    submit_review(){
-      // fetch()
-      // THIS DOES NOT WORK
+    async submit_review(){
       if (this.written_body || this.written_rating){
-        let new_review = {
-          album_spotify_id: this.id,
-          rating: this.written_rating,
-          body: this.written_body
-        }
-        let data = {
-          submission: new_review,
-          session: undefined,
-          current_user: undefined,
-        }
-        fetch(this.url_root + "review/write", {
-          method: 'POST',
+        const response = await fetch(`http://localhost:5345/review/write`, {
+          method: "POST",
           headers: {
-            'Authorization': 'Basic asdvapewuvrhfweaif',
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(data => {
-          console.log(data);
-          this.close_review();
-        })
+          body: JSON.stringify({ 
+            "album_spotify_id": this.id,
+            "body": this.written_body,
+            "rating": this.written_rating,
+          }),
+        });
+
+        console.log(response.json());
+        if (!response.ok) {
+          let error = response.statusText;
+          console.log(`Error: ${error}`);
+        } else {
+          const token = await response.json();
+          console.log(token)
+        }
+        console.log(response.ok);
       }
     }
   },
   mounted(){
-    this.get_album()
+    this.get_album(),
+    this.get_reviews()
   }
 }
 </script>
@@ -109,44 +118,48 @@ export default {
   <div class="container">
     <div class="album-column">
       <p class="search-progress" v-if="is_loading">Loading album info...</p>
-        <div v-else-if="album_info.name">
-          <img :src="`${album_info['images'][0]['url']}`">
-          <p id="album-title">{{ album_info.name }}</p>
-          <p id="artists">{{ artist_string(album_info.artists) }}</p>
-          <div v-for="track in album_info['tracks']['items']">
-            <p>{{ track.track_number }}. <a v-bind:href="`${track['external_urls']['spotify']}`" target="_bind">{{ track.name }}</a></p>
-          </div>
-        </div>
-      </div>
-      <div class="review-column">
-        <div class="write-container" v-if="is_writing">
-          <div class="review-col-header" style="justify-content: space-between;">
-            <button class="button" @click="close_review()">Cancel</button>
-            <h1>Write a Review</h1>
-            <button class="button" @click="submit_review()">Publish Review</button>
-          </div>
-          <div class="review-form">
-            <strong class="review-title">[user]'s review of {{ album_info.name }}</strong>
-            <div>
-              <label for="rating">Rating (optional, 1-10): <input id="rating" v-model="written_rating" type="number" min=1 max=10 style="font-size: 1em"></label>
-            </div>
-            <div>
-              <label for="review-text">Review content:</label>
-              <textarea id="review-text" v-model="written_body"></textarea>
-            </div>
-          </div>
-        </div>
-        <div class="read-container" v-else="!is_writing">
-          <div class="review-col-header">
-            <h1>Reviews</h1>
-            <button class="button" @click="is_writing = true" style="margin: 40px; margin-top: 50px; margin-left: 20px;">Write Review</button>
-          </div>
-          <Review :review="temp_review" :show-album="true" v-for="i in [1,2,3,4,5,6,7,8,9]"/>
+      <div v-else-if="album_info.name">
+        <img :src="`${album_info['images'][0]['url']}`">
+        <p id="album-title">{{ album_info.name }}</p>
+        <p id="artists">{{ artist_string(album_info.artists) }}</p>
+        <div v-for="track in album_info['tracks']['items']">
+          <p>{{ track.track_number }}. <a v-bind:href="`${track['external_urls']['spotify']}`" target="_bind">{{ track.name }}</a></p>
         </div>
       </div>
     </div>
+    <div class="review-column">
+      <div class="write-container" v-if="is_writing">
+        <div class="review-col-header" style="justify-content: space-between;">
+          <button class="button" @click="close_review()">Cancel</button>
+          <h1>Write a Review</h1>
+          <button class="button" @click="submit_review()">Publish Review</button>
+        </div>
+        <div class="review-form">
+          <strong class="review-title">[user]'s review of {{ album_info.name }}</strong>
+          <div>
+            <label for="rating">Rating (optional, 1-10): <input id="rating" v-model="written_rating" type="number" min=1 max=10 style="font-size: 1em"></label>
+          </div>
+          <div>
+            <label for="review-text">Review content:</label>
+            <textarea id="review-text" v-model="written_body"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="read-container" v-else="!is_writing">
+        <div class="review-col-header">
+          <h1>Reviews</h1>
+          <button class="button" @click="is_writing = true" style="margin: 40px; margin-top: 50px; margin-left: 20px;">Write Review</button>
+        </div>
+        <p class="search-progress" v-if="is_loading">Loading album info...</p>
+        <Review v-else-if="reviews.length > 0" v-for="review in reviews" :review="review" :show-album="false"/>
+        <div v-else style="font-size: 2em">
+          <p>No reviews found.</p>
+          <p>Be the first to write one!</p>
+        </div>
+      </div>
+    </div>
+    </div>
 </template>
-
 <style scoped>
 * {
   box-sizing: border-box;
