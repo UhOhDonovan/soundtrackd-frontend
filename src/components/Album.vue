@@ -26,6 +26,9 @@ export default {
         name: '',
         artists: [{name: ''}],
         images: [{url: ''}],
+        external_urls: {
+          spotify: '',
+        },
         tracks: {
           items: [
             { name: '',
@@ -136,6 +139,7 @@ export default {
         <img :src="`${album_info['images'][0]['url']}`">
         <p id="album-title">{{ album_info.name }}</p>
         <p id="artists">{{ artist_string(album_info.artists) }}</p>
+        <small>(<a v-bind:href="`${album_info['external_urls']['spotify']}`" target="_bind">Open in Spotify</a>)</small>
         <div v-for="track in album_info['tracks']['items']">
           <p>{{ track.track_number }}. <a v-bind:href="`${track['external_urls']['spotify']}`" target="_bind">{{ track.name }}</a></p>
         </div>
@@ -223,10 +227,14 @@ img {
 
 #album-title {
   font-weight: bold;
-  font-size: 15pt;
+  font-size: 16pt;
   word-break: break-word;
   word-wrap: break-word;
-  overflow-wrap: break-word
+  overflow-wrap: break-word;
+  margin: 0;
+}
+#artists {
+  margin: 0;
 }
 
 @keyframes flickerAnimation {
