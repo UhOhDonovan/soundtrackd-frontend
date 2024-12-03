@@ -21,7 +21,23 @@ export default {
       .then(data => {this.search_results = data['items'];
         this.is_searching = false
       })
-    }
+    },
+    artist_string(artists: {name: string}[]) {
+      let result = "";
+      if (artists.length > 2){
+        for (let i = 0; i < artists.length - 1; i++){
+          result += artists[i].name + ", "
+        }
+      }
+      else if (artists.length == 2){
+        result += artists[0].name + " "
+      }
+      if (result !== ""){
+        result += "and "
+      }
+      result += artists[artists.length - 1]["name"]
+      return result
+    },
   }
   
 }
@@ -41,7 +57,7 @@ export default {
             <img id="album-cover":src="`${result['images'][0]['url']}`"></img>
             <p id="album-title">{{ result['name'] }}</p>
             <!-- <img id="album-cover":src="`${result['images'][0]['url']}`" style="width:100px"></img> -->
-            <p v-for="artist in result['artists']">{{ artist['name'] }}</p>
+            <p>{{ artist_string(result['artists']) }}</p>
           </div>
         </div>
       </div>

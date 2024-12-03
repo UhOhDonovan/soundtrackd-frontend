@@ -26,6 +26,9 @@ export default {
         name: '',
         artists: [{name: ''}],
         images: [{url: ''}],
+        external_urls: {
+          spotify: '',
+        },
         tracks: {
           items: [
             { name: '',
@@ -71,8 +74,13 @@ export default {
     },
     artist_string(artists: {name: string}[]) {
       let result = "";
-      for (let i = 0; i < artists.length - 1; i++){
-        result += artists[i].name + ", "
+      if (artists.length > 2){
+        for (let i = 0; i < artists.length - 1; i++){
+          result += artists[i].name + ", "
+        }
+      }
+      else if (artists.length == 2){
+        result += artists[0].name + " "
       }
       if (result !== ""){
         result += "and "
@@ -104,9 +112,13 @@ export default {
         if (!response.ok) {
           let error = response.statusText;
           console.log(`Error: ${error}`);
+          if(error === "Unauthorized"){
+            console.log("Your session has expired, please log in again.")
+            let password = prompt("Your session has expired. Please re-enter your password to continue.")
+          }
         } else {
-          const token = await response.json();
-          console.log(token)
+          this.close_review()
+          this.get_reviews()
         }
         console.log(response.ok);
       }
@@ -127,6 +139,7 @@ export default {
         <img :src="`${album_info['images'][0]['url']}`">
         <p id="album-title">{{ album_info.name }}</p>
         <p id="artists">{{ artist_string(album_info.artists) }}</p>
+        <small>(<a v-bind:href="`${album_info['external_urls']['spotify']}`" target="_bind">Open in Spotify</a>)</small>
         <div v-for="track in album_info['tracks']['items']">
           <p>{{ track.track_number }}. <a v-bind:href="`${track['external_urls']['spotify']}`" target="_bind">{{ track.name }}</a></p>
         </div>
@@ -155,13 +168,13 @@ export default {
           <h1>Reviews</h1>
           <button class="button" @click="is_writing = true" style="margin: 40px; margin-top: 50px; margin-left: 20px;">Write Review</button>
         </div>
-        <p class="search-progress" v-if="is_loading">Loading album info...</p>
+        <p class="search-progress" v-if="is_loading">Loading album reviews...</p>
         <Review v-else-if="reviews.length > 0" v-for="review in reviews" :review="review" :show-album="false"/>
         <div v-else style="font-size: 2em">
           <p>No reviews found.</p>
           <p>Be the first to write one!</p>
         </div>
-        <p v-for="review in reviews" hidden="true"> {{ review }}</p> <!-- Hide metadata by default -->
+        <p v-for="review in reviews" hidden="false"> {{ review }}</p> <!-- Hide metadata by default -->
       </div>
     </div>
     </div>
@@ -214,10 +227,14 @@ img {
 
 #album-title {
   font-weight: bold;
-  font-size: 15pt;
+  font-size: 16pt;
   word-break: break-word;
   word-wrap: break-word;
-  overflow-wrap: break-word
+  overflow-wrap: break-word;
+  margin: 0;
+}
+#artists {
+  margin: 0;
 }
 
 @keyframes flickerAnimation {
