@@ -69,7 +69,7 @@ export default {
       for (let i = 0; i < artists.length - 1; i++){
         result += artists[i].name + ", "
       }
-      if (result != ""){
+      if (result !== ""){
         result += "and "
       }
       result += artists[artists.length - 1]["name"]
