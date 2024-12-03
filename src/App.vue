@@ -48,15 +48,19 @@ export default {
     <RouterView :key="$route.fullPath"/>
   </main>
   <br>
-  <h5>Current route path: {{ $route.fullPath }}</h5>
+  <h5 hidden="true">Current route path: {{ $route.fullPath }}</h5>
   <nav>
     <RouterLink to="/">Go To Home</RouterLink>
     <div></div>
     <RouterLink to="/search"> Go To Search</RouterLink>
     <div></div>
-    <RouterLink to="/register">Go To Register</RouterLink>
-    <div></div>
-    <RouterLink to="/login">Go To Login</RouterLink>
+    <RouterLink v-if="!username" to="/register">Go To Register</RouterLink>
+    <div v-if="!username"></div>
+    <RouterLink v-if="!username" to="/login">Go To Login</RouterLink>
+    <div v-if="username" ></div>
+    <RouterLink v-if="username" :to="`/profile/${username}`">Go To My Profile ({{ username }})</RouterLink>
+    <div v-if="username" ></div>
+    <a v-if="username" href="#" @click.prevent="sign_out()">Sign Out</a>
   </nav>
 </template>
 
