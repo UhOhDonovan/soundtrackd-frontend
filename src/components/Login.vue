@@ -34,6 +34,12 @@ const sendInfo = async (username: string, password: string) => {
   } else {
     const token = await response.json();
     localStorage.setItem("token", token.access_token);
+    localStorage.setItem("username", request.username);
+    window.dispatchEvent(new CustomEvent('user-changed', {
+      detail: {
+        storage: localStorage.getItem('username')
+      }
+    }));
     router.push({ path: "/" });
   }
 

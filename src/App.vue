@@ -1,4 +1,28 @@
-<script setup lang="ts">
+<script lang="ts">
+export default {
+  data(){
+    return{
+      username: localStorage.getItem('username'),
+    }
+  },
+  mounted(){
+    window.addEventListener('user-changed', (event) => {
+      console.log("event recieved")
+      this.username = (<any>event).detail.storage;
+    });
+  },
+  methods: {
+    sign_out(){
+      localStorage.setItem('username', "")
+      localStorage.setItem('token', "")
+      window.dispatchEvent(new CustomEvent('user-changed', {
+        detail: {
+          storage: ''
+        }
+      }));
+    }
+  }
+}
 </script>
 
 <template>
@@ -13,23 +37,30 @@
     </li>
     <li class="nav-link"><RouterLink to="/">Home</RouterLink></li>
     <li class="nav-link"><RouterLink to="/search">Search</RouterLink></li>
-    <li class="nav-link"><RouterLink to="/login">Log In</RouterLink></li>
-    <li class="nav-link"><RouterLink to="/register">Sign Up</RouterLink></li>
+    <li v-if="!username" class="nav-link"><RouterLink to="/login">Log In</RouterLink></li>
+    <li v-if="!username" class="nav-link"><RouterLink to="/register">Sign Up</RouterLink></li>
+    <li v-if="username" class="nav-link"><RouterLink :to="`/profile/${username}`">My Profile ({{ username }})</RouterLink></li>
+    <li v-if="username" class="nav-link" id="sign-out"><a href="#" @click.prevent="sign_out()">Sign Out</a></li>
+
   </nav>
   
   <main>
     <RouterView :key="$route.fullPath"/>
   </main>
   <br>
-  <h5>Current route path: {{ $route.fullPath }}</h5>
+  <h5 hidden="true">Current route path: {{ $route.fullPath }}</h5>
   <nav>
     <RouterLink to="/">Go To Home</RouterLink>
     <div></div>
     <RouterLink to="/search"> Go To Search</RouterLink>
     <div></div>
-    <RouterLink to="/register">Go To Register</RouterLink>
-    <div></div>
-    <RouterLink to="/login">Go To Login</RouterLink>
+    <RouterLink v-if="!username" to="/register">Go To Register</RouterLink>
+    <div v-if="!username"></div>
+    <RouterLink v-if="!username" to="/login">Go To Login</RouterLink>
+    <div v-if="username" ></div>
+    <RouterLink v-if="username" :to="`/profile/${username}`">Go To My Profile ({{ username }})</RouterLink>
+    <div v-if="username" ></div>
+    <a v-if="username" href="#" @click.prevent="sign_out()">Sign Out</a>
   </nav>
 </template>
 
@@ -70,6 +101,13 @@ li {
 }
 
 .nav-link a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+#sign-out {
   display: block;
   color: white;
   text-align: center;
